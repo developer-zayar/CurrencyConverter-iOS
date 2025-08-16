@@ -38,7 +38,7 @@ struct CurrencyPickerView: View {
                 .buttonStyle(.plain)
             }
             .navigationTitle("Select Currency")
-            .searchable(text: $searchText, prompt: "Search")
+            .searchable(text: $searchText, prompt: "Search countries")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {

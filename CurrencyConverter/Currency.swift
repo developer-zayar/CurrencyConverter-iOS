@@ -15,6 +15,10 @@ struct Currency: Identifiable {
     let countryCode: String
 }
 
+struct CurrencyReponse: Codable {
+    let conversionRates: [String: Double]
+}
+
 let dummyCurrencies: [Currency] = [
     Currency(code: "USD", name: "United States", symbol: "$", countryCode: "US"),
     Currency(code: "MYR", name: "Malaysia", symbol: "RM", countryCode: "MY"),

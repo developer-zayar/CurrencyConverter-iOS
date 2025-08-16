@@ -5,6 +5,7 @@
 //  Created by Zay Yar Phyo on 13/08/2025.
 //
 
+import Alamofire
 import SwiftUI
 
 struct ContentView: View {
@@ -144,7 +145,24 @@ struct ContentView: View {
                     CurrencyPickerView(selectedCurrency: $toCurrency)
                 }
             }
+            .task {
+                getCurrencyData()
+            }
         }
+    }
+
+    private func getCurrencyData() {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        AF.request("https://v6.exchangerate-api.com/v6/1c2f03558dc36eaaf3bc7526/latest/USD")
+            .responseDecodable(of: CurrencyReponse.self, decoder: decoder) { response in
+                switch response.result {
+                case .success(let currencies):
+                    print("Successfully fetch currencies: \(currencies.conversionRates.count)")
+                case .failure(let error):
+                    print("Error: \(error)")
+                }
+            }
     }
 
     private func swapCurrencies() {
