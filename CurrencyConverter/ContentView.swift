@@ -5,9 +5,11 @@
 //  Created by Zay Yar Phyo on 13/08/2025.
 //
 
+import Alamofire
 import SwiftUI
 
 struct ContentView: View {
+    @State var currencies: [Currency] = []
     @State private var fromCurrency: Currency? = nil
     @State private var toCurrency: Currency? = nil
     @State private var amount: String = ""
@@ -138,13 +140,78 @@ struct ContentView: View {
                     }
                 }
                 .sheet(isPresented: $showFromSheet) {
-                    CurrencyPickerView(selectedCurrency: $fromCurrency)
+                    CurrencyPickerView(currencies: $currencies) { selectedCurrency in
+                        fromCurrency = selectedCurrency
+                        getConversionRate()
+                    }
                 }
                 .sheet(isPresented: $showToSheet) {
-                    CurrencyPickerView(selectedCurrency: $toCurrency)
+                    CurrencyPickerView(currencies: $currencies) { selectedCurrency in
+                        toCurrency = selectedCurrency
+                        getConversionRate()
+                    }
                 }
             }
+            .task {
+//                getCurrencyData()
+                getSupportedCodes()
+            }
         }
+    }
+
+    func getConversionRate() {
+        guard
+            let fromCode = fromCurrency?.code,
+            let toCode = toCurrency?.code,
+            let amountDouble = Double(amount)
+        else {
+            convertedAmount = ""
+            return
+        }
+
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        AF.request("https://v6.exchangerate-api.com/v6/1c2f03558dc36eaaf3bc7526/pair/\(fromCode)/\(toCode)/\(amountDouble)")
+            .responseDecodable(of: ConversionResponse.self, decoder: decoder) { response in
+                switch response.result {
+                case .success(let rate):
+                    print("Successfully fetch rate: \(rate.conversionRate), result: \(rate.conversionResult ?? 0.0)")
+                    convertedAmount = String(format: "%.2f", rate.conversionResult ?? 0.0)
+                case .failure(let error):
+                    print("Error: \(error)")
+                }
+            }
+    }
+
+    func getSupportedCodes() {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        AF.request("https://v6.exchangerate-api.com/v6/1c2f03558dc36eaaf3bc7526/codes")
+            .responseDecodable(of: CurrencyCodesResponse.self, decoder: decoder) { response in
+                switch response.result {
+                case .success(let codes):
+                    print("Successfully fetch currencies: \(codes.supportedCodes.count)")
+                    currencies = codes.supportedCodes.map { countryCode in
+                        Currency(code: countryCode[0], name: countryCode[1], symbol: nil, countryCode: nil)
+                    }
+                case .failure(let error):
+                    print("Error: \(error)")
+                }
+            }
+    }
+
+    private func getCurrencyData() {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        AF.request("https://v6.exchangerate-api.com/v6/1c2f03558dc36eaaf3bc7526/latest/USD")
+            .responseDecodable(of: CurrencyReponse.self, decoder: decoder) { response in
+                switch response.result {
+                case .success(let currencies):
+                    print("Successfully fetch currencies: \(currencies.conversionRates.count)")
+                case .failure(let error):
+                    print("Error: \(error)")
+                }
+            }
     }
 
     private func swapCurrencies() {

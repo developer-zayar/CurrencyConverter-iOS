@@ -11,8 +11,26 @@ struct Currency: Identifiable {
     let id = UUID()
     let code: String
     let name: String
-    let symbol: String
-    let countryCode: String
+    let symbol: String?
+    let countryCode: String?
+}
+
+struct CurrencyReponse: Decodable {
+    let result: String
+    let conversionRates: [String: Double]
+}
+
+struct CurrencyCodesResponse: Decodable {
+    let result: String
+    let supportedCodes: [[String]]
+}
+
+struct ConversionResponse: Decodable {
+    let result: String
+    let baseCode: String
+    let targetCode: String
+    let conversionRate: Double
+    let conversionResult: Double?
 }
 
 let dummyCurrencies: [Currency] = [
