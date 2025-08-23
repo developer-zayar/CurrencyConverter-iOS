@@ -10,8 +10,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State var currencies: [Currency] = []
-    @State private var fromCurrency: Currency? = nil
-    @State private var toCurrency: Currency? = nil
+    @State private var fromCurrency: Currency?
+    @State private var toCurrency: Currency?
     @State private var amount: String = ""
     @State private var convertedAmount: String = ""
 
@@ -44,7 +44,7 @@ struct ContentView: View {
                         HStack {
                             Button(action: {
                                 showFromSheet.toggle()
-                            }) {
+                            }, label: {
                                 HStack {
                                     if let countryCode = fromCurrency?.countryCode {
                                         Text(countryCode)
@@ -63,7 +63,7 @@ struct ContentView: View {
 
                                     Image(systemName: "chevron.down")
                                 }
-                            }
+                            })
 
                             Divider()
 
@@ -95,7 +95,7 @@ struct ContentView: View {
                         HStack {
                             Button(action: {
                                 showToSheet.toggle()
-                            }) {
+                            }, label: {
                                 HStack {
                                     if let countryCode = toCurrency?.countryCode {
                                         Text(countryCode)
@@ -114,7 +114,7 @@ struct ContentView: View {
 
                                     Image(systemName: "chevron.down")
                                 }
-                            }
+                            })
 
                             Divider()
 
@@ -177,6 +177,7 @@ struct ContentView: View {
                 case .success(let rate):
                     print("Successfully fetch rate: \(rate.conversionRate), result: \(rate.conversionResult ?? 0.0)")
                     convertedAmount = String(format: "%.2f", rate.conversionResult ?? 0.0)
+                    
                 case .failure(let error):
                     print("Error: \(error)")
                 }
@@ -194,6 +195,7 @@ struct ContentView: View {
                     currencies = codes.supportedCodes.map { countryCode in
                         Currency(code: countryCode[0], name: countryCode[1], symbol: nil, countryCode: nil)
                     }
+                    
                 case .failure(let error):
                     print("Error: \(error)")
                 }
@@ -208,6 +210,7 @@ struct ContentView: View {
                 switch response.result {
                 case .success(let currencies):
                     print("Successfully fetch currencies: \(currencies.conversionRates.count)")
+                    
                 case .failure(let error):
                     print("Error: \(error)")
                 }

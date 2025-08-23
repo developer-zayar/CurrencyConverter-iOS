@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7523D1852E50F3A600C8D1C9 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 7523D1842E50F3A600C8D1C9 /* Alamofire */; };
+		75D1F3522E58D06B0028E368 /* netfox in Frameworks */ = {isa = PBXBuildFile; productRef = 75D1F3512E58D06B0028E368 /* netfox */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75D1F3522E58D06B0028E368 /* netfox in Frameworks */,
 				7523D1852E50F3A600C8D1C9 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,6 +59,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A42A1C2E4CE93E00FEED3A /* Build configuration list for PBXNativeTarget "CurrencyConverter" */;
 			buildPhases = (
+				750462032E517BF00084559C /* Run SwiftLint Script */,
 				75A42A0D2E4CE93C00FEED3A /* Sources */,
 				75A42A0E2E4CE93C00FEED3A /* Frameworks */,
 				75A42A0F2E4CE93C00FEED3A /* Resources */,
@@ -71,6 +74,7 @@
 			name = CurrencyConverter;
 			packageProductDependencies = (
 				7523D1842E50F3A600C8D1C9 /* Alamofire */,
+				75D1F3512E58D06B0028E368 /* netfox */,
 			);
 			productName = CurrencyConverter;
 			productReference = 75A42A112E4CE93C00FEED3A /* CurrencyConverter.app */;
@@ -102,6 +106,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				7523D1832E50F3A600C8D1C9 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				75D1F3502E58D06B0028E368 /* XCRemoteSwiftPackageReference "netfox" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 75A42A122E4CE93C00FEED3A /* Products */;
@@ -123,6 +128,29 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		750462032E517BF00084559C /* Run SwiftLint Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run SwiftLint Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nexport PATH=\"/opt/homebrew/bin:$PATH\"\nswiftlint --config \"${SRCROOT}/.swiftlint.yml\"\nif command -v swiftlint >/dev/null 2>&1\nthen\n    swiftlint\nelse\n    echo \"warning: `swiftlint` command not found - See https://github.com/realm/SwiftLint#installation for installation instructions.\"\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		75A42A0D2E4CE93C00FEED3A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -136,6 +164,8 @@
 /* Begin XCBuildConfiguration section */
 		75A42A1A2E4CE93E00FEED3A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 75A42A132E4CE93C00FEED3A /* CurrencyConverter */;
+			baseConfigurationReferenceRelativePath = Staging.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -200,6 +230,8 @@
 		};
 		75A42A1B2E4CE93E00FEED3A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 75A42A132E4CE93C00FEED3A /* CurrencyConverter */;
+			baseConfigurationReferenceRelativePath = Production.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -257,14 +289,19 @@
 		};
 		75A42A1D2E4CE93E00FEED3A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 75A42A132E4CE93C00FEED3A /* CurrencyConverter */;
+			baseConfigurationReferenceRelativePath = Staging.xcconfig;
 			buildSettings = {
+				APP_BUNDLE_DISPLAY_NAME = "$(APP_BUNDLE_DISPLAY_NAME)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H2UMUQNH9M;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_BUNDLE_DISPLAY_NAME)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -275,7 +312,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.zayar.CurrencyConverter;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -285,14 +322,19 @@
 		};
 		75A42A1E2E4CE93E00FEED3A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 75A42A132E4CE93C00FEED3A /* CurrencyConverter */;
+			baseConfigurationReferenceRelativePath = Production.xcconfig;
 			buildSettings = {
+				APP_BUNDLE_DISPLAY_NAME = "$(APP_BUNDLE_DISPLAY_NAME)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H2UMUQNH9M;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(APP_BUNDLE_DISPLAY_NAME)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -303,7 +345,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.zayar.CurrencyConverter;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_IDENTIFIER)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -343,6 +385,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		75D1F3502E58D06B0028E368 /* XCRemoteSwiftPackageReference "netfox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kasketis/netfox";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.21.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -350,6 +400,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7523D1832E50F3A600C8D1C9 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		75D1F3512E58D06B0028E368 /* netfox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 75D1F3502E58D06B0028E368 /* XCRemoteSwiftPackageReference "netfox" */;
+			productName = netfox;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -45,5 +45,5 @@ let dummyCurrencies: [Currency] = [
     Currency(code: "JPY", name: "Japan", symbol: "¥", countryCode: "JP"),
     Currency(code: "CNY", name: "China", symbol: "¥", countryCode: "CN"),
     Currency(code: "KRW", name: "South Korea", symbol: "₩", countryCode: "KR"),
-    Currency(code: "INR", name: "India", symbol: "₹", countryCode: "IN"),
+    Currency(code: "INR", name: "India", symbol: "₹", countryCode: "IN")
 ]

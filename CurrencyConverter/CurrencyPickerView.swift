@@ -58,11 +58,10 @@ struct CurrencyPickerView: View {
     func getFilteredCurrency() -> [Currency] {
         if searchText.isEmpty {
             return currencies
-        } else {
-            return currencies.filter {
-                $0.name.lowercased().contains(searchText.lowercased()) ||
-                    $0.code.lowercased().contains(searchText.lowercased())
-            }
+        }
+        return currencies.filter {
+            $0.name.lowercased().contains(searchText.lowercased()) ||
+                $0.code.lowercased().contains(searchText.lowercased())
         }
     }
 }
