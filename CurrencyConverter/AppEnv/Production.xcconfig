@@ -1,5 +1,5 @@
 //
-//  Staging.xcconfig
+//  Production.xcconfig
 //  CurrencyConverter
 //
 //  Created by Zay Yar Phyo on 20/08/2025.
@@ -8,5 +8,7 @@
 // Configuration settings file format documentation can be found at:
 // https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project
 
-APP_BUNDLE_DISPLAY_NAME = Staging
-APP_BUNDLE_IDENTIFIER = com.zayar.CurrencyConverter.staging
+APP_BUNDLE_DISPLAY_NAME = Production
+APP_BUNDLE_IDENTIFIER = com.zayar.CurrencyConverter
+HOST_NAME = v6.exchangerate-api.com
+API_KEY = 1c2f03558dc36eaaf3bc7526

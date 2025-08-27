@@ -9,11 +9,10 @@ import Alamofire
 import SwiftUI
 
 struct ContentView: View {
-    @State var currencies: [Currency] = []
-    @State private var fromCurrency: Currency?
-    @State private var toCurrency: Currency?
     @State private var amount: String = ""
     @State private var convertedAmount: String = ""
+
+    private var viewModel = CurrencyViewModel()
 
     @State private var showFromSheet = false
     @State private var showToSheet = false
@@ -46,7 +45,7 @@ struct ContentView: View {
                                 showFromSheet.toggle()
                             }, label: {
                                 HStack {
-                                    if let countryCode = fromCurrency?.countryCode {
+                                    if let countryCode = viewModel.fromCurrency?.countryCode {
                                         Text(countryCode)
                                             .font(.title)
                                     } else {
@@ -54,9 +53,9 @@ struct ContentView: View {
                                     }
 
                                     VStack(alignment: .leading, spacing: 0) {
-                                        Text(fromCurrency?.code ?? "Select")
+                                        Text(viewModel.fromCurrency?.code ?? "Select")
 
-                                        if let symbol = fromCurrency?.symbol {
+                                        if let symbol = viewModel.fromCurrency?.symbol {
                                             Text(symbol)
                                         }
                                     }
@@ -97,7 +96,7 @@ struct ContentView: View {
                                 showToSheet.toggle()
                             }, label: {
                                 HStack {
-                                    if let countryCode = toCurrency?.countryCode {
+                                    if let countryCode = viewModel.toCurrency?.countryCode {
                                         Text(countryCode)
                                             .font(.title)
                                     } else {
@@ -105,9 +104,9 @@ struct ContentView: View {
                                     }
 
                                     VStack(alignment: .leading, spacing: 0) {
-                                        Text(toCurrency?.code ?? "Select")
+                                        Text(viewModel.toCurrency?.code ?? "Select")
 
-                                        if let symbol = toCurrency?.symbol {
+                                        if let symbol = viewModel.toCurrency?.symbol {
                                             Text(symbol)
                                         }
                                     }
@@ -140,29 +139,29 @@ struct ContentView: View {
                     }
                 }
                 .sheet(isPresented: $showFromSheet) {
-                    CurrencyPickerView(currencies: $currencies) { selectedCurrency in
-                        fromCurrency = selectedCurrency
+                    CurrencyPickerView(currencies: viewModel.supportedCurrencies) { selectedCurrency in
+                        viewModel.fromCurrency = selectedCurrency
                         getConversionRate()
                     }
                 }
                 .sheet(isPresented: $showToSheet) {
-                    CurrencyPickerView(currencies: $currencies) { selectedCurrency in
-                        toCurrency = selectedCurrency
+                    CurrencyPickerView(currencies: viewModel.supportedCurrencies) { selectedCurrency in
+                        viewModel.toCurrency = selectedCurrency
                         getConversionRate()
                     }
                 }
             }
             .task {
-//                getCurrencyData()
-                getSupportedCodes()
+//                viewModel.getCurrencyData()
+                viewModel.getSupportedCodes()
             }
         }
     }
 
     func getConversionRate() {
         guard
-            let fromCode = fromCurrency?.code,
-            let toCode = toCurrency?.code,
+            let fromCode = viewModel.fromCurrency?.code,
+            let toCode = viewModel.toCurrency?.code,
             let amountDouble = Double(amount)
         else {
             convertedAmount = ""
@@ -177,40 +176,7 @@ struct ContentView: View {
                 case .success(let rate):
                     print("Successfully fetch rate: \(rate.conversionRate), result: \(rate.conversionResult ?? 0.0)")
                     convertedAmount = String(format: "%.2f", rate.conversionResult ?? 0.0)
-                    
-                case .failure(let error):
-                    print("Error: \(error)")
-                }
-            }
-    }
 
-    func getSupportedCodes() {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        AF.request("https://v6.exchangerate-api.com/v6/1c2f03558dc36eaaf3bc7526/codes")
-            .responseDecodable(of: CurrencyCodesResponse.self, decoder: decoder) { response in
-                switch response.result {
-                case .success(let codes):
-                    print("Successfully fetch currencies: \(codes.supportedCodes.count)")
-                    currencies = codes.supportedCodes.map { countryCode in
-                        Currency(code: countryCode[0], name: countryCode[1], symbol: nil, countryCode: nil)
-                    }
-                    
-                case .failure(let error):
-                    print("Error: \(error)")
-                }
-            }
-    }
-
-    private func getCurrencyData() {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        AF.request("https://v6.exchangerate-api.com/v6/1c2f03558dc36eaaf3bc7526/latest/USD")
-            .responseDecodable(of: CurrencyReponse.self, decoder: decoder) { response in
-                switch response.result {
-                case .success(let currencies):
-                    print("Successfully fetch currencies: \(currencies.conversionRates.count)")
-                    
                 case .failure(let error):
                     print("Error: \(error)")
                 }
@@ -218,14 +184,14 @@ struct ContentView: View {
     }
 
     private func swapCurrencies() {
-        let temp = fromCurrency
-        fromCurrency = toCurrency
-        toCurrency = temp
+        let temp = viewModel.fromCurrency
+        viewModel.fromCurrency = viewModel.toCurrency
+        viewModel.toCurrency = temp
     }
 
     private func clearData() {
-        fromCurrency = nil
-        toCurrency = nil
+        viewModel.fromCurrency = nil
+        viewModel.toCurrency = nil
         amount = ""
         convertedAmount = ""
     }

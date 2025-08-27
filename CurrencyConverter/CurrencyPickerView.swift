@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CurrencyPickerView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var currencies: [Currency]
+    var currencies: [Currency]
 //    @Binding var selectedCurrency: Currency?
     var onSelectCurrency: ((Currency) -> Void)?
 
@@ -67,5 +67,5 @@ struct CurrencyPickerView: View {
 }
 
 #Preview {
-    CurrencyPickerView(currencies: .constant([.init(code: "USD", name: "United States", symbol: "$", countryCode: "US")]))
+    CurrencyPickerView(currencies: [.init(code: "USD", name: "United States", symbol: "$", countryCode: "US")])
 }

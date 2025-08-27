@@ -1,0 +1,149 @@
+disabled_rules: # rule identifiers turned on by default to exclude from running
+  - colon
+  - comma
+  - control_statement
+  - trailing_whitespace
+  - line_length
+  - todo
+  - file_length
+  - function_body_length
+  - inclusive_language
+  - switch_case_alignment
+  - function_parameter_count
+  - type_body_length
+  - large_tuple
+opt_in_rules: 
+  # some rules are turned off by default, so you need to opt-in
+  # Find all the available rules by running: `swiftlint rules`
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - comma_inheritance
+  - conditional_returns_on_newline
+  - contains_over_filter_is_empty
+  - contains_over_filter_count
+  - discarded_notification_center_observer
+  - empty_count
+  - empty_collection_literal
+  - empty_string
+  - empty_xctest_method
+  - explicit_init
+  - fallthrough
+  - fatal_error_message
+  - file_header
+  - file_name_no_space
+  - first_where
+  - flatmap_over_map_reduce
+  - force_unwrapping
+  - function_default_parameter_at_end
+  - identical_operands
+  - joined_default_parameter
+  - last_where
+  - legacy_multiple
+  - let_var_whitespace
+  - literal_expression_end_indentation
+  - local_doc_comment
+  - lower_acl_than_parent
+  - missing_docs
+  - modifier_order
+  - multiline_arguments_brackets
+  - multiline_literal_brackets
+  - multiline_parameters
+  - multiline_parameters_brackets
+  - number_separator
+  - object_literal
+  - operator_usage_whitespace
+  - optional_enum_case_matching
+  - overridden_super_call
+  - override_in_extension
+  - pattern_matching_keywords
+  - period_spacing
+  - prefer_self_in_static_references
+  - prefer_self_type_over_type_of_self
+  - prefer_zero_over_explicit_init
+  - reduce_into
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - return_value_from_void_function
+  - self_binding
+  - shorthand_optional_binding
+  - sorted_first_last
+  - sorted_imports
+  - static_operator
+  - strict_fileprivate
+  - superfluous_else
+  - switch_case_on_newline
+  - toggle_bool
+  - type_contents_order
+  - unhandled_throwing_task
+  - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
+  - vertical_whitespace_opening_braces
+  - vertical_whitespace_closing_braces
+  - vertical_whitespace_between_cases
+  - vertical_parameter_alignment_on_call
+  - yoda_condition
+
+analyzer_rules: # Rules run by `swiftlint analyze`
+  - explicit_self
+
+included: # paths to include during linting. `--path` is ignored if present.
+
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - package.swift
+  - .build
+  - Pods
+
+# If true, SwiftLint will not fail if no lintable files are found.
+allow_zero_lintable_files: false
+
+number_separator:
+  minimum_length: 6
+
+cyclomatic_complexity:
+  ignores_case_statements: false
+  warning: 20
+  error: 25
+
+type_name:
+  min_length: 4 # only warning
+  max_length: # warning and error
+    warning: 44
+    error: 50
+  excluded: 
+    - iPhone # excluded via string
+    - Ear
+  allowed_symbols: ['_']
+identifier_name:
+  min_length: # only min_length
+    error: 1 # only error
+  max_length:
+    warning: 50
+    error: 60
+  allowed_symbols: ['_']
+  excluded: # excluded via string array
+    - id
+    - URL
+    - GlobalAPIKey
+    - rhs
+    - lhs
+    - i
+    - all
+    - key
+    - D12
+    - D12Plus
+    - D13
+    - off
+    - url
+    - sut
+    - row
+    - run
+    - nhs
+    - va
+    - am
+    - hcs
+    - OFF
+    - YES
+    - NO
+    - T
+reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, codeclimate, junit, html, emoji, sonarqube, markdown, github-actions-logging)
