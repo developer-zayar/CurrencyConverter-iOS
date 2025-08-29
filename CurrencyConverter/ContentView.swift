@@ -9,10 +9,7 @@ import Alamofire
 import SwiftUI
 
 struct ContentView: View {
-    @State private var amount: String = ""
-    @State private var convertedAmount: String = ""
-
-    private var viewModel = CurrencyViewModel()
+    @StateObject var viewModel = CurrencyViewModel()
 
     @State private var showFromSheet = false
     @State private var showToSheet = false
@@ -66,9 +63,13 @@ struct ContentView: View {
 
                             Divider()
 
-                            TextField("Enter Amount", text: $amount)
+                            TextField("Enter Amount", text: $viewModel.amount)
                                 .keyboardType(.decimalPad)
                                 .font(.title3)
+                                .submitLabel(.done)
+                                .onSubmit {
+                                    viewModel.getConversionRate()
+                                }
                         }
                         .padding()
                         .background(
@@ -76,12 +77,14 @@ struct ContentView: View {
                                 .fill(Color(.systemGray6))
                         )
 
-                        Button(action: swapCurrencies) {
+                        Button(action: {
+                            viewModel.swapCurrencies()
+                        }, label: {
                             Image(systemName: "arrow.up.arrow.down.circle.fill")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 40, height: 40)
-                        }
+                        })
                         .frame(maxWidth: .infinity)
                         .padding()
 
@@ -117,7 +120,7 @@ struct ContentView: View {
 
                             Divider()
 
-                            TextField("Converted Amount", text: $convertedAmount)
+                            TextField("Converted Amount", text: $viewModel.convertedAmount)
                                 .keyboardType(.decimalPad)
                                 .font(.title3)
                                 .disabled(true)
@@ -128,72 +131,44 @@ struct ContentView: View {
                                 .fill(Color(.systemGray6))
                         )
                     }
+
+                    Spacer().frame(height: 24)
+
+                    Button {
+                        viewModel.getConversionRate()
+                    } label: {
+                        Text("Convert")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
                 .padding()
                 .navigationTitle("Currency Converter")
                 .toolbar {
                     ToolbarItem {
                         Button("Clear") {
-                            clearData()
+                            viewModel.clearData()
                         }
                     }
                 }
                 .sheet(isPresented: $showFromSheet) {
                     CurrencyPickerView(currencies: viewModel.supportedCurrencies) { selectedCurrency in
                         viewModel.fromCurrency = selectedCurrency
-                        getConversionRate()
+                        viewModel.getConversionRate()
                     }
                 }
                 .sheet(isPresented: $showToSheet) {
                     CurrencyPickerView(currencies: viewModel.supportedCurrencies) { selectedCurrency in
                         viewModel.toCurrency = selectedCurrency
-                        getConversionRate()
+                        viewModel.getConversionRate()
                     }
                 }
             }
             .task {
-//                viewModel.getCurrencyData()
-                viewModel.getSupportedCodes()
+                await viewModel.getSupportedCurrencies()
+                await viewModel.getLatestRates()
             }
         }
-    }
-
-    func getConversionRate() {
-        guard
-            let fromCode = viewModel.fromCurrency?.code,
-            let toCode = viewModel.toCurrency?.code,
-            let amountDouble = Double(amount)
-        else {
-            convertedAmount = ""
-            return
-        }
-
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        AF.request("https://v6.exchangerate-api.com/v6/1c2f03558dc36eaaf3bc7526/pair/\(fromCode)/\(toCode)/\(amountDouble)")
-            .responseDecodable(of: ConversionResponse.self, decoder: decoder) { response in
-                switch response.result {
-                case .success(let rate):
-                    print("Successfully fetch rate: \(rate.conversionRate), result: \(rate.conversionResult ?? 0.0)")
-                    convertedAmount = String(format: "%.2f", rate.conversionResult ?? 0.0)
-
-                case .failure(let error):
-                    print("Error: \(error)")
-                }
-            }
-    }
-
-    private func swapCurrencies() {
-        let temp = viewModel.fromCurrency
-        viewModel.fromCurrency = viewModel.toCurrency
-        viewModel.toCurrency = temp
-    }
-
-    private func clearData() {
-        viewModel.fromCurrency = nil
-        viewModel.toCurrency = nil
-        amount = ""
-        convertedAmount = ""
     }
 }
 

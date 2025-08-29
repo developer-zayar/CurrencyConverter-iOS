@@ -23,8 +23,7 @@ enum AppConfig {
     private static func configuration(key: Plist) -> String {
         if let infoDictionary = Bundle.main.infoDictionary {
             return infoDictionary[key.value] as? String ?? ""
-        } else {
-            fatalError("Unable to load plist file")
         }
+        fatalError("Unable to load plist file")
     }
 }
